@@ -30,7 +30,7 @@ class ViewController: UIViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
-        
+    
         // Do any additional setup after loading the view.
     }
 
@@ -40,25 +40,44 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     // section 을 몇개 할것인가 결정(number)
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
     
     // cell을 몇개 할것인가 결정(필수코드)(number)
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0{
+            return 3
+        }
         return restaurantNames.count
     }
     // cell을 어떻게 구성할 것인가 결정(필수코드)(cellfor)
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let basicCell = tableView.dequeueReusableCell(withIdentifier: "basicCell", for: indexPath)
         
-        basicCell.textLabel?.text = restaurantNames[indexPath.row]
-        basicCell.detailTextLabel?.text = restaurantLocations[indexPath.row]
-        basicCell.imageView?.image = UIImage(named: restaurantImages[indexPath.row])
+        if indexPath.section == 0 {
+            let secondCell = tableView.dequeueReusableCell(withIdentifier: "secondCell", for: indexPath)
+            secondCell.textLabel?.text = "test"
+            
+            return secondCell
+            
+        }
         
         
-        return basicCell
+        let basicCell = tableView.dequeueReusableCell(withIdentifier: "basicCell", for: indexPath) as? BasicTableViewCell
+
+
+//        basicCell.textLabel?.text = restaurantNames[indexPath.row]
+//        basicCell.detailTextLabel?.text = restaurantLocations[indexPath.row]
+//        basicCell.imageView?.image = UIImage(named: restaurantImages[indexPath.row])
+
+        basicCell?.nameLabel.text = restaurantNames[indexPath.row]
+        basicCell?.locationLabel.text = restaurantLocations[indexPath.row]
+        basicCell?.typeLabel.text = restaurantTypes[indexPath.row]
+        basicCell?.imgView.image = UIImage(named: restaurantImages[indexPath.row])
         
+        
+        return basicCell!
+
     }
     
     
@@ -76,8 +95,48 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         
         present(alretContrller, animated: true, completion: nil)
+        
+
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 10
+        }
+        else {
+            return 30
+        }
+        return 0
     }
     
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            return "testSection"
+        }
+        return "restaurantSecion"
+    }
+ 
     
+    
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 30))
+        if (section == 0) {
+            headerView.backgroundColor = .red
+            headerView.tintColor = .black
+        }
+        else {
+            headerView.backgroundColor = .purple
+        }
+        return headerView
+        
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 {
+            return 45
+        }
+        return 220
+    }
 }
 
